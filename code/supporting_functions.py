@@ -133,6 +133,8 @@ def create_output_images(Rover):
                   cv2.FONT_HERSHEY_COMPLEX, 0.4, (255, 255, 255), 1)
       cv2.putText(map_add,"Rocks: "+str(Rover.samples_found), (0, 55), 
                   cv2.FONT_HERSHEY_COMPLEX, 0.4, (255, 255, 255), 1)
+      cv2.putText(map_add,"Mode: "+str(Rover.mode), (0, 70), 
+                  cv2.FONT_HERSHEY_COMPLEX, 0.4, (255, 255, 255), 1)
 
       # Convert map and vision image to base64 strings for sending to server
       pil_img = Image.fromarray(map_add.astype(np.uint8))
@@ -146,6 +148,3 @@ def create_output_images(Rover):
       encoded_string2 = base64.b64encode(buff.getvalue()).decode("utf-8")
 
       return encoded_string1, encoded_string2
-
-
-
