@@ -15,30 +15,21 @@ The input images are still in image pixels cooridnate system and are requrired t
 [images2]: 
 [images3]:
 
-## Decision Making
+## Decision Making and Actions
 Once the rover completes the image procession it is required to perform specifc actions. This is done by creating a decsion tree, giving rover the intelligence to work in specific environments. The task the rover was to navigate through a given terrain and pickup all the available rock samples.
 The decision tree is primiraly broken down into 3 modes `forward , stop and seen_rock` with the initial default set to throttle at maximum speed. 
-As the rover moves forward it checks if there is any obstacle in its near vision `np.sum(Rover.vision_image[130:150, 150:170, 0]) < 160`. If path is clear then check if there is a rock in the image.
+As the rover moves forward it checks if there is any obstacle in its near vision `np.sum(Rover.vision_image[130:150, 150:170, 0]) < 160`. If path is clear then check if there is a rock in the image. But if there are 2 rocks in visible at the same time then the robot dosenot understand which to pick. For this reason we check if there is a rock present only on the right side of the rovers vision `np.any(Rover.vision_image[130:150,150:320,1])`from the center of the rover. If a rock is visibile then the rock_seen mode is enabled. In other case it keeps going forward with steer set to be clipped under -15 to 15 degrees of mean navigable angles.
+If there are any obstacles then stop mode is enabled. In stop mode brakes are release and the rover starts to steer till it finds a clear path. Once the path is clear then then the forward mode is enabled. The stop mode enables the rover to handle braking and steer to find clear path. 
 
+The actions taken by the rover are moving forward, detection of rock samples and then pick them up and th stop when needed. All actions are performed based on the processed images received from the rovers camera.
 
-
-
-
-
-
-
-
-#### 1. Fill in the `perception_step()` (at the bottom of the `perception.py` script) and `decision_step()` (in `decision.py`) functions in the autonomous mapping scripts and an explanation is provided in the writeup of how and why these functions were modified as they were.
-
-
-#### 2. Launching in autonomous mode your rover can navigate and map autonomously.  Explain your results and how you might improve them in your writeup.  
-
-**Note: running the simulator with different choices of resolution and graphics quality may produce different results, particularly on different machines!  Make a note of your simulator settings (resolution and graphics quality set on launch) and frames per second (FPS output to terminal by `drive_rover.py`) in your writeup when you submit the project so your reviewer can reproduce your results.**
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
-
-
-
-![alt text][image3]
+## Conclusion
+Overall the project provided a great learing opprtunity to understand image processing and the basics of building a decision tree. It help gain an basic understanding of to process telemetry data and Image processing.
+Few of the challenges that are still to be overcome:
+* Navigating through routes which have the landscape shadows on them. When applied with perspective transform the landscapae shadows appear darker resembling obstacle areas but in reality are just navigable areas. 
+* Enhancing the decision tree to steer in both the directions in stop mode. Tried to provide the steering based on the max possible navi angles. But there would occur scenarios wherein the robot would get stuck in a mode where the sum of nav angles are same on both ends causing it to just break.
+* Getting the rover out of the round loop it gets stuck it while trying to navigate.
+* Getting fedility to improve above 70%.
+* Making the rover to select co-ordinates based on validating if it had visited that specific map area. 
 
 
